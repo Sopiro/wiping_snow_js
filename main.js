@@ -168,7 +168,7 @@ class Game
         this.maxBalls = 100;
         this.balls = [];
         this.spread = 0.8;
-        this.wiperForce = 5.0;
+        this.wiperForce = 3.0;
         this.wiper = new Wiper(new Vector2(this.width / 2.0, this.height), this.height * 0.95, 11, 4);
 
         for (let i = 0; i < this.maxBalls - this.balls.length; i++)
