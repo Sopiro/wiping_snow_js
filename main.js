@@ -217,7 +217,7 @@ class Game
     {
         this.balls.forEach(b =>
         {
-            b.addForce(new Vector2(0, this.gravity));
+            b.addForce(new Vector2(0, this.gravity * (144.0 / this.times.length)));
             b.updateFriction(this.friction);
         });
 
