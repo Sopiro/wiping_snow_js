@@ -166,15 +166,15 @@ class Game
 
     init()
     {
-        this.stepDivision = 4;
         this.friction = 0.995;
         this.gravity = 0.15;
         this.screenBounds = false;
-        this.maxBalls = 100;
+        this.maxBalls = 180;
         this.balls = [];
         this.spread = 0.8;
         this.wiperForce = 3.0;
         this.wiperSpeed = 1.5;
+        this.stepDivision = 2.5 * this.wiperSpeed + 1;
         this.wiper = new Wiper(new Vector2(this.width / 2.0, this.height), this.height * 0.95, 11, 4);
 
         for (let i = 0; i < this.maxBalls - this.balls.length; i++)
