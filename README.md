@@ -7,4 +7,4 @@ Coding from scratch [video](www.naver.com)
 https://sopiro.github.io/wiping_snow_js/
 
 ## Preview
-![img](.github/img.gif)
+![img](.github/preview.gif)
