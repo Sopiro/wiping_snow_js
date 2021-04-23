@@ -174,6 +174,7 @@ class Game
         this.balls = [];
         this.spread = 0.8;
         this.wiperForce = 3.0;
+        this.wiperSpeed = 1.5;
         this.wiper = new Wiper(new Vector2(this.width / 2.0, this.height), this.height * 0.95, 11, 4);
 
         for (let i = 0; i < this.maxBalls - this.balls.length; i++)
@@ -229,10 +230,10 @@ class Game
 
             let colliders = [];
 
-            const angleDifferential = Math.abs(Math.cos(performance.now() / 1000.0));
-            
+            const angleDifferential = Math.abs(Math.cos(performance.now() * this.wiperSpeed / 1000.0));
+
             // this.wiper.update(0.8);
-            this.wiper.update(Math.sin(performance.now() / 1000.0) * 1.5);
+            this.wiper.update(Math.sin(performance.now() * this.wiperSpeed / 1000.0) * 1.5);
 
             this.balls.forEach(b =>
             {
@@ -405,7 +406,10 @@ class Game
     }
 }
 
+var game;
+
 window.onload = () =>
 {
-    new Game(1280, 720).start();
+    game = new Game(1280, 720);
+    game.start();
 }
