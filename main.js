@@ -102,12 +102,12 @@ class Ball
 
 class Wiper
 {
-    constructor(pos, len, bottomWidth, topWidth)
+    constructor(pos, len, bottomRad, topRad)
     {
         this.pos = pos;
         this.len = len;
-        this.bottomWidth = bottomWidth;
-        this.topWidth = topWidth;
+        this.bottomRad = bottomRad;
+        this.topRad = topRad;
 
         this.base = new Vector2(0, 0);
         this.tip = new Vector2(0, -len);
@@ -134,11 +134,11 @@ class Wiper
     {
         ctx.beginPath();
         ctx.fillStyle = "#202224";
-        ctx.moveTo(this.tPosBase.subV(this.nor.mulS(this.bottomWidth)).x, this.tPosBase.subV(this.nor.mulS(this.bottomWidth)).y);
-        ctx.lineTo(this.tPosTip.subV(this.nor.mulS(this.topWidth)).x, this.tPosTip.subV(this.nor.mulS(this.topWidth)).y);
-        ctx.lineTo(this.tPosTip.addV(this.nor.mulS(this.topWidth)).x, this.tPosTip.addV(this.nor.mulS(this.topWidth)).y);
-        ctx.lineTo(this.tPosBase.addV(this.nor.mulS(this.bottomWidth)).x, this.tPosBase.addV(this.nor.mulS(this.bottomWidth)).y);
-        ctx.lineTo(this.tPosBase.subV(this.nor.mulS(this.bottomWidth)).x, this.tPosBase.subV(this.nor.mulS(this.bottomWidth)).y);
+        ctx.moveTo(this.tPosBase.subV(this.nor.mulS(this.bottomRad)).x, this.tPosBase.subV(this.nor.mulS(this.bottomRad)).y);
+        ctx.lineTo(this.tPosTip.subV(this.nor.mulS(this.topRad)).x, this.tPosTip.subV(this.nor.mulS(this.topRad)).y);
+        ctx.lineTo(this.tPosTip.addV(this.nor.mulS(this.topRad)).x, this.tPosTip.addV(this.nor.mulS(this.topRad)).y);
+        ctx.lineTo(this.tPosBase.addV(this.nor.mulS(this.bottomRad)).x, this.tPosBase.addV(this.nor.mulS(this.bottomRad)).y);
+        ctx.lineTo(this.tPosBase.subV(this.nor.mulS(this.bottomRad)).x, this.tPosBase.subV(this.nor.mulS(this.bottomRad)).y);
         ctx.fill();
     }
 }
@@ -172,7 +172,7 @@ class Game
         this.maxBalls = 180;
         this.balls = [];
         this.spread = 0.8;
-        this.wiperForce = 3.0;
+        this.wiperForce = 150.0;
         this.wiperSpeed = 1.5;
         this.stepDivision = 3 * this.wiperSpeed + 1;
         this.wiper = new Wiper(new Vector2(this.width / 2.0, this.height), this.height * 0.95, 11, 4);
@@ -261,7 +261,7 @@ class Game
             {
                 const mid = this.wiper.tPosBase.addV(this.wiper.tPosTip).divS(2.0);
 
-                if (this.wiper.len / 2.0 + this.wiper.bottomWidth + this.wiper.topWidth < b.pos.subV(mid).len() + b.r)
+                if (this.wiper.len / 2.0 + this.wiper.bottomRad + this.wiper.topRad < b.pos.subV(mid).len() + b.r)
                     return;
 
                 const baseToBall = b.pos.subV(this.wiper.tPosBase);
@@ -272,10 +272,10 @@ class Game
                     let dir = b.pos.subV(this.wiper.tPosBase);
                     const dist = dir.len();
 
-                    if (dist < b.r + this.wiper.bottomWidth)
+                    if (dist < b.r + this.wiper.bottomRad)
                     {
                         dir = dir.normalized();
-                        const gap = this.wiper.bottomWidth + b.r - dist;
+                        const gap = this.wiper.bottomRad + b.r - dist;
                         b.pos = b.pos.addV(dir.mulS(gap));
                     }
                 }
@@ -285,10 +285,10 @@ class Game
                     let dir = b.pos.subV(this.wiper.tPosTip);
                     const dist = dir.len();
 
-                    if (dist < b.r + this.wiper.topWidth)
+                    if (dist < b.r + this.wiper.topRad)
                     {
                         dir = dir.normalized();
-                        const gap = this.wiper.topWidth + b.r - dist;
+                        const gap = this.wiper.topRad + b.r - dist;
                         b.pos = b.pos.addV(dir.mulS(gap));
                     }
                 }
@@ -299,7 +299,7 @@ class Game
                     const dist = nor.len();
 
                     const boundsPercentage = bound / this.wiper.len;
-                    const lerpedR = boundsPercentage * this.wiper.topWidth + (1 - boundsPercentage) * this.wiper.bottomWidth;
+                    const lerpedR = boundsPercentage * this.wiper.topRad + (1 - boundsPercentage) * this.wiper.bottomRad;
 
                     if (dist < lerpedR + b.r)
                     {
@@ -308,7 +308,7 @@ class Game
                         b.pos = b.pos.addV(this.wiper.nor.mulS(gap * topOrBott));
 
                         b.v = b.v.addV(this.wiper.nor.mulS(this.wiper.nor.dot(b.v) * -2));
-                        b.addForce(nor.mulS(boundsPercentage * this.wiperForce * angleDifferential));
+                        b.addForce(nor.normalized().mulS(boundsPercentage * this.wiperForce * angleDifferential));
                     }
                 }
             });
